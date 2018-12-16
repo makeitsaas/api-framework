@@ -31,16 +31,16 @@ module.exports = function() {
 
 
 
-  let models = {
-    Entity: sequelize.define('entity',require('./models/entity'))
+  let schemas = {
+    Entity: sequelize.define('entity',require('./schemas/entity'))
   };
 
   let syncs = [testConnection];
 
-  for(let key in models) {
-    syncs.push(models[key].sync());
+  for(let key in schemas) {
+    syncs.push(schemas[key].sync());
   }
 
-  return Q.all(syncs).then(() => models);
+  return Q.all(syncs).then(() => schemas);
 
 }

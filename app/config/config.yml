@@ -1,0 +1,7 @@
+resources:
+  default:
+    routes:
+      auto: true
+  expose:
+    entity: ~
+    entity2: my-alias
