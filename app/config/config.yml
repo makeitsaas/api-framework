@@ -4,4 +4,16 @@ resources:
       auto: true
   expose:
     entity: ~
-    entity2: my-alias
+    entity2:
+      - get: /truc/:param
+        resolver: get.entities
+        security: security.rule1
+      - post: /truc/:param
+        resolver: get.entities
+        security: security.rule1
+      - get: /truc2/:param
+        resolver: get.entities
+        security: security.rule1
+queue:
+  listen:
+    queueName: hook.service_name.function
