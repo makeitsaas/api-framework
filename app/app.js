@@ -11,11 +11,17 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 
 const config = YAML.load('./app/config/config.yml');
 
+framework.configure();
+
 require('./models/orm')().then(models => {
   app.models = models;
 
   framework.configureRoutes(app, config);
   require('./config/routes/routes')(app);
   app.get('/', (req, res) => res.send('App is up and running'));
-  app.listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`));
+  app.listen(process.env.PORT, () => console.log(`
+*************************************************
+       Example app listening on port ${process.env.PORT}!
+*************************************************
+    `));
 }).catch((e) => console.log('error', e));
