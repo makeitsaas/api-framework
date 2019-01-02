@@ -1,4 +1,5 @@
 const Q = require('q');
+const fs = require('fs');
 
 module.exports = function() {
   console.log('sequelize', process.env.DB_HOSTNAME, process.env.DB_DATABASE, process.env.DB_USERNAME, process.env.DB_PASSWORD);
@@ -32,8 +33,16 @@ module.exports = function() {
 
 
   let schemas = {
-    Entity: sequelize.define('entity',require('./schemas/entity'))
+    // Entity: sequelize.define('entity',require('./schemas/entity'))
   };
+
+  let items = fs.readdirSync(__dirname + '/schemas');
+
+  items.map(fileName => {
+    console.log('handle', fileName);
+    let entityName = fileName.replace(/^(.*)\.js$/, '$1');
+    schemas[entityName] = require(`./schemas/${entityName}`)(sequelize, Sequelize.DataTypes)
+  })
 
   let syncs = [testConnection];
 

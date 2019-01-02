@@ -1,4 +1,14 @@
 module.exports = function(app) {
+  app.get('/characters', (req, res) => {
+    app.models.character.findAll().then(characters => {
+      res.send({
+        characters
+      })
+    }).catch(error => {
+      res.send({error})
+    })
+  });
+
   app.get('/entities', (req, res) => res.send({
     id: 1,
     title: 'Los titolidos',
