@@ -1,22 +1,19 @@
 require('dotenv').config();
 const YAML = require('yamljs');
+const config = YAML.load('./app/config/config.yml');
 const express = require('express');
 const bodyParser = require('body-parser');
-const framework = require('../framework/core/core');
 let app = express();
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
-const config = YAML.load('./app/config/config.yml');
-
-framework.configure();
-
 require('./models/orm')().then(models => {
   app.models = models;
 
-  framework.configureRoutes(app, config);
+  const framework = require('../framework/core/core')(app, config);
+
   require('./config/routes/routes')(app);
   app.get('/', (req, res) => res.send('App is up and running'));
   app.listen(process.env.PORT, () => console.log(`
@@ -24,4 +21,15 @@ require('./models/orm')().then(models => {
        Example app listening on port ${process.env.PORT}!
 *************************************************
     `));
+
+  framework.cache.set('holidays', {beach: 'volley'});
+
+  framework.queue.subscribe('channel-one').then(message => {
+    console.log('get this message', message);
+    framework.cache.get('holidays').then(value => console.log('holidays :', value));
+  });
+
+  setTimeout(() => {
+    framework.queue.publish('channel-one', {foo: 'bar'});
+  }, 1000)
 }).catch((e) => console.log('error', e));
