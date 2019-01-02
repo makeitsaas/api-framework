@@ -1,10 +1,8 @@
 require('dotenv').config();
-const YAML = require('yamljs');
-const config = YAML.load('./app/config/config.yml');
 const express = require('express');
 const bodyParser = require('body-parser');
 let app = express();
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
@@ -12,7 +10,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 require('./models/orm')().then(models => {
   app.models = models;
 
-  const framework = require('../framework/core/core')(app, config);
+  const framework = require('../framework/core/core')(app);
 
   require('./config/routes/routes')(app);
   app.get('/', (req, res) => res.send('App is up and running'));

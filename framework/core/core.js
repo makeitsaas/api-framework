@@ -1,5 +1,9 @@
-module.exports = function(app, config){
+const YAML = require('yamljs');
+
+module.exports = function(app){
   let framework = {};
+
+  const config = YAML.load('./app/config/config.yml');
   const builder = require('./core-builder')(app, config);
 
 
