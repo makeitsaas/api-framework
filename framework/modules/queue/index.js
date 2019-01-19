@@ -1,12 +1,16 @@
 const redis = require("redis");
+const rxjs = require('rxjs');
 let CHANNELS = [];
 module.exports = () => {
 
-  let SUBSCRIPTIONS_CALLBACKS = [];
+  let SUBSCRIPTIONS_CALLBACKS = [],
+      redisNamespace = process.env.namespace || 'app-password-namespace',
+      prefix = `${redisNamespace}:queue-`,
+      prefixRegex = new RegExp(`^${prefix}`);
 
   // connection to redis
-  var sub = redis.createClient();
-  var pub = redis.createClient();
+  var sub = redis.createClient();  // put here password
+  var pub = redis.createClient();  // put here password
   var msg_count = 0;
 
 
@@ -14,17 +18,22 @@ module.exports = () => {
   sub.on("ready", (err) => console.log("queue connection .....OK"));
 
   // when receiving a message from subscribed channels, do this
-  sub.on("message", function (messageChannel, message) {
-      console.log("sub channel " + messageChannel + ": " + message);
+  sub.on("message", function (prefixedChannel, message) {
+    console.log('prefixedChannel', prefixedChannel, message)
+    if(isValidPrefix(prefixedChannel)) {
+      let channel = removePrefix(prefixedChannel);
+      //console.log("sub channel " + channel + ": " + message);
       SUBSCRIPTIONS_CALLBACKS.map(callback => {
         if(typeof callback === "function") {
-          callback(messageChannel, message);
+          callback(channel, message);
         }
-      })
-      // sub.unsubscribe();
-      // sub.quit();
-      // pub.quit();
+      });
+    }
   });
+
+  // sub.unsubscribe();
+  // sub.quit();
+  // pub.quit();
 
   // setInterval(() => {
   //   if(CHANNELS.length) {
@@ -40,32 +49,52 @@ module.exports = () => {
     }
   }
 
+  const getPrefixedChannel = (channel) => {
+    return `${prefix}${channel}`
+  }
+
+  const removePrefix = (prefixedChannel) => {
+    return prefixedChannel.replace(prefixRegex, '');
+  }
+
+  const isValidPrefix = (prefixedChannel) => {
+    return prefixRegex.test(prefixedChannel);
+  }
+
+  console.log(rxjs.Observable)
+
 
   return {
-    subscribe: function(queueName) {
+    observable: function(channel) {
       let active = true;
       let callback;
-      let q = new Promise((resolve, reject) => {
-        callback = (channel, message) => {
-          if(channel === queueName && active) {
-            resolve(message);
+      let prefixedChannel = getPrefixedChannel(channel);
+
+      let obs = rxjs.Observable.create(observer => {
+
+        callback = (c, message) => {
+          if(c === channel && active) {
+            observer.next(message);
           }
         }
         SUBSCRIPTIONS_CALLBACKS.push(callback)
-      });
 
-      q.unsubscribe = function() {
-        active = false;
-        callback = null;
-        // plus remove callback
-      }
+        const unsubscribe = () => {
+          active = false;
+          callback = null;
+        }
 
-      subscribeIfNecessary(queueName);
+        return unsubscribe;
+      })
 
-      return q;
+      subscribeIfNecessary(prefixedChannel);
+
+      return obs;
     },
-    publish: function(queueName, message) {
-      pub.publish(queueName, `Some message to ${queueName} ${JSON.stringify(message)}`);
+    publish: function(channel, message) {
+      let prefixedChannel = getPrefixedChannel(channel);
+      console.log('publish')
+      pub.publish(prefixedChannel, `Some message to ${channel} ${JSON.stringify(message)}`);
     }
   }
 }

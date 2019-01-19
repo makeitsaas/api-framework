@@ -1,6 +1,8 @@
 module.exports = () =>  {
-  var redis = require("redis"),
-      client = redis.createClient();
+  let redisNamespace = process.env.namespace || 'app-password-namespace',
+      prefix = `${redisNamespace}:cache`,
+      redis = require("redis"),
+      client = redis.createClient({prefix});  // put here password
 
   client.on("error", function (err) {
       console.log("Error connecting cache " + err);
