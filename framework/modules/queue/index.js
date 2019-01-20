@@ -4,7 +4,7 @@ let CHANNELS = [];
 module.exports = () => {
 
   let SUBSCRIPTIONS_CALLBACKS = [],
-      redisNamespace = process.env.namespace || 'app-password-namespace',
+      redisNamespace = process.env.NAMESPACE || 'app-password-namespace',
       prefix = `${redisNamespace}:queue-`,
       prefixRegex = new RegExp(`^${prefix}`);
 
@@ -19,7 +19,7 @@ module.exports = () => {
 
   // when receiving a message from subscribed channels, do this
   sub.on("message", function (prefixedChannel, message) {
-    console.log('prefixedChannel', prefixedChannel, message)
+    //console.log('prefixedChannel', prefixedChannel, message)
     if(isValidPrefix(prefixedChannel)) {
       let channel = removePrefix(prefixedChannel);
       //console.log("sub channel " + channel + ": " + message);
@@ -61,9 +61,6 @@ module.exports = () => {
     return prefixRegex.test(prefixedChannel);
   }
 
-  console.log(rxjs.Observable)
-
-
   return {
     observable: function(channel) {
       let active = true;
@@ -93,7 +90,7 @@ module.exports = () => {
     },
     publish: function(channel, message) {
       let prefixedChannel = getPrefixedChannel(channel);
-      console.log('publish')
+      //console.log('publish')
       pub.publish(prefixedChannel, `Some message to ${channel} ${JSON.stringify(message)}`);
     }
   }

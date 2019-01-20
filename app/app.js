@@ -10,7 +10,10 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 require('./models/orm')().then(models => {
   app.models = models;
 
-  const framework = require('../framework/core/core')(app);
+  let framework = require('../framework/core/core')(app);
+
+  framework.models = models;
+  app.framework = framework;
 
   require('./config/routes/routes')(app);
   app.get('/', (req, res) => res.send('App is up and running'));
@@ -20,14 +23,22 @@ require('./models/orm')().then(models => {
 *************************************************
     `));
 
+  let subLogs = framework.queue.observable('logs').subscribe(message => {
+    console.log('some log', message);
+  });
+
+  /*
+  // DEMOS
+
   framework.cache.set('holidays', {beach: 'volley'});
 
-  let sub = framework.queue.observable('channel-one').subscribe(message => {
+  let subExample = framework.queue.observable('channel-one').subscribe(message => {
     console.log('get this message', message);
     framework.cache.get('holidays').then(value => console.log('holidays :', value)).catch(err => console.log('error', err));
   });
 
   setTimeout(() => framework.queue.publish('channel-one', {foo: 'bar'}), 1000)
   setTimeout(() => framework.queue.publish('channel-one', {foo2: 'bar2'}), 2000)
-  setTimeout(() => (sub.unsubscribe() || framework.queue.publish('channel-one', {foo3: 'bar3'})), 3000)
+  setTimeout(() => (subExample.unsubscribe() || framework.queue.publish('channel-one', {foo3: 'bar3'})), 3000)
+  */
 }).catch((e) => console.log('error', e));

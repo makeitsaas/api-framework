@@ -1,5 +1,5 @@
 module.exports = () =>  {
-  let redisNamespace = process.env.namespace || 'app-password-namespace',
+  let redisNamespace = process.env.NAMESPACE || 'app-password-namespace',
       prefix = `${redisNamespace}:cache`,
       redis = require("redis"),
       client = redis.createClient({prefix});  // put here password
