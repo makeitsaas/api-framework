@@ -1,5 +1,7 @@
 module.exports = function(app, config) {
-  const redisSettings = {};
+  const redisSettings = {
+    host: process.env.REDIS_HOST || 'localhost'
+  };
   return {
     configureQueue: function() {
       return require('../modules/queue/index')(redisSettings);
