@@ -1,10 +1,11 @@
 module.exports = function(app, config) {
+  const redisSettings = {};
   return {
     configureQueue: function() {
-      return require('../modules/queue/index')();
+      return require('../modules/queue/index')(redisSettings);
     },
     configureCache: function() {
-      return require('../modules/cache/index')();
+      return require('../modules/cache/index')(redisSettings);
     },
     configureRoutes: function() {
       const auth = require('../modules/auth/auth');

@@ -1,7 +1,7 @@
 const redis = require("redis");
 const rxjs = require('rxjs');
 let CHANNELS = [];
-module.exports = () => {
+module.exports = (redisSettings) => {
 
   let SUBSCRIPTIONS_CALLBACKS = [],
       redisNamespace = process.env.NAMESPACE || 'app-password-namespace',
@@ -9,8 +9,8 @@ module.exports = () => {
       prefixRegex = new RegExp(`^${prefix}`);
 
   // connection to redis
-  var sub = redis.createClient();  // put here password
-  var pub = redis.createClient();  // put here password
+  var sub = redis.createClient({...redisSettings});  // put here password
+  var pub = redis.createClient({...redisSettings});  // put here password
   var msg_count = 0;
 
 
