@@ -30,8 +30,6 @@ module.exports = function() {
     throw new Error('listId does not exist');
   });
 
-
-
   let schemas = {
     // Entity: sequelize.define('entity',require('./schemas/entity'))
   };
@@ -46,10 +44,13 @@ module.exports = function() {
 
   let syncs = [testConnection];
 
-  for(let key in schemas) {
-    syncs.push(schemas[key].sync());
+  // si pas de table migations => syn
+  let hasMigrationTable = false;
+  if(!hasMigrationTable) {
+    for(let key in schemas) {
+      syncs.push(schemas[key].sync());
+    }
   }
 
   return Q.all(syncs).then(() => schemas);
-
 }

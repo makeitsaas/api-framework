@@ -5,13 +5,16 @@ resources:
   expose:
     entity: ~
     entity2:
-      - get: /truc/:param
-        handler: handler-example.simpleResolve
+      - get: /test/authentication
+        handler: handler-example.authenticationResolve
+        security: security.rule1
+      - get: /test/routing
+        handler: handler-example.routingResolve
         security: security.rule1
       - post: /truc/:param
         handler: get.entities
         security: security.rule1
-      - get: /truc2/:param
+      - get: /test/database
         handler: handler-example.modelResolve
         security: security.rule1
 queue:

@@ -14,7 +14,7 @@ const getRemoteKey = (header, callback) => {
       callback(null, key);
     }
   });
-}
+};
 
 const parseToken = (token) => {
     return new Promise((resolve, reject) => {
@@ -26,7 +26,7 @@ const parseToken = (token) => {
         }
       });
     });
-}
+};
 
 class User {
   jwt = null;

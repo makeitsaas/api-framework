@@ -25,11 +25,15 @@ module.exports = function(app, config, auth) {
 
             const resolve = (body) => {
               res.send(body);
-            }
+            };
 
             if(handler) {
               try {
-                handler(app.framework, resolve)[handlerFunction]();
+                let ctx = {
+                  user: req.user,
+                  ...app.framework
+                };
+                handler(ctx, resolve)[handlerFunction]();
               } catch(error) {
                 console.log('error', error);
                 resolve({mode: 'handler', route, error});

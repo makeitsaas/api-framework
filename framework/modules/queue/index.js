@@ -90,8 +90,7 @@ module.exports = (redisSettings) => {
     },
     publish: function(channel, message) {
       let prefixedChannel = getPrefixedChannel(channel);
-      //console.log('publish')
-      pub.publish(prefixedChannel, `Some message to ${channel} ${JSON.stringify(message)}`);
+      pub.publish(prefixedChannel, `${JSON.stringify(message)}`);
     }
   }
 }

@@ -1,13 +1,16 @@
 module.exports = function(ctx, resolve) {
   return {
-    simpleResolve: function() {
+    routingResolve: function() {
       resolve({
-        id: 1,
-        title: 'Los titolidos',
-        type: 'default',
-        date: 'todo'
+        routing: 'calls handlers properly'
       }, 200);
       ctx.queue.publish('logs', 'resolved simpleResolve');
+    },
+    authenticationResolve: function() {
+      resolve({
+        authenticated: ctx.user.isAuthenticated(),
+        infos: ctx.user.jwt
+      })
     },
     modelResolve: function() {
       ctx.models.character.findAll().then(characters => {
