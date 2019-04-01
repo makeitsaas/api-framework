@@ -1,17 +1,31 @@
-module.exports = function(app, config) {
+module.exports = function(app, config, framework) {
   const redisSettings = {
     host: process.env.REDIS_HOST || 'localhost'
   };
   return {
     configureQueue: function() {
-      return require('../modules/queue/index')(redisSettings);
+      const queueAPI = require('../modules/queue/index')(redisSettings);
+
+      return Promise.resolve(queueAPI);
     },
     configureCache: function() {
-      return require('../modules/cache/index')(redisSettings);
+      const cacheAPI = require('../modules/cache/index')(redisSettings);
+
+      return Promise.resolve(cacheAPI);
     },
     configureRoutes: function() {
       const auth = require('../modules/auth/auth');
-      return require('../modules/route/route')(app, config, auth);
+      const routes = require('../modules/route/route')(app, config, auth, framework);
+
+      // default root path
+      app.get('/', (req, res) => res.send('App is up and running'));
+
+      return Promise.resolve(routes);
+    },
+    configureModels: async function() {
+      const models = await require('../../app/models/orm')();
+
+      return models;
     }
   }
-}
+};

@@ -1,28 +1,4 @@
-require('dotenv').config();
-const express = require('express');
-const bodyParser = require('body-parser');
-let app = express();
-app.use(bodyParser.json());       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
-}));
-
-require('./models/orm')().then(models => {
-  app.models = models;
-
-  let framework = require('../framework/core/core')(app);
-
-  framework.models = models;
-  app.framework = framework;
-
-  require('./config/routes/routes')(app);
-  app.get('/', (req, res) => res.send('App is up and running'));
-  app.listen(process.env.PORT, () => console.log(`
-*************************************************
-       Example app listening on port ${process.env.PORT}!
-*************************************************
-    `));
-
+require('../framework/core/core').then(framework => {
   let subLogs = framework.queue.observable('logs').subscribe(message => {
     console.log('some log', message);
   });

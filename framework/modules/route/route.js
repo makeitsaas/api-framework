@@ -1,4 +1,4 @@
-module.exports = function(app, config, auth) {
+module.exports = function(app, config, auth, framework) {
   if(config && config.resources && config.resources.expose) {
     for(var key in config.resources.expose) {
       let routes = config.resources.expose[key];
@@ -31,7 +31,7 @@ module.exports = function(app, config, auth) {
               try {
                 let ctx = {
                   user: req.user,
-                  ...app.framework
+                  ...framework
                 };
                 handler(ctx, resolve)[handlerFunction]();
               } catch(error) {
@@ -46,4 +46,4 @@ module.exports = function(app, config, auth) {
       }
     }
   }
-}
+};

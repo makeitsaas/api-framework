@@ -1,21 +1,14 @@
-const YAML = require('yamljs');
+const config = require('./core-config');
+const app = require('./core-server');
+const framework = {};
 
-module.exports = function(app){
-  let framework = {};
+const builder = require('./core-builder')(app, config, framework);
 
-  const config = YAML.load('./app/config/config.yml');
-  const builder = require('./core-builder')(app, config);
+const load = async function() {
+  await builder.configureRoutes();
+  framework.queue = await builder.configureQueue();
+  framework.cache = await builder.configureCache();
+  framework.models = await builder.configureModels();
+};
 
-  app.use(function(req, res, next) {
-    // CORS
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    next();
-  });
-
-  builder.configureRoutes();
-  framework.queue = builder.configureQueue();
-  framework.cache = builder.configureCache();
-
-  return framework;
-}
+module.exports = load().then(() => framework);
