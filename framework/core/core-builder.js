@@ -23,7 +23,7 @@ module.exports = function(app, config, framework) {
       return Promise.resolve(routes);
     },
     configureModels: async function() {
-      const sequelize = await require('../modules/database/database')();
+      const sequelize = await require('../modules/database/database')(framework);
 
       // TODO : configure here framework.database
 

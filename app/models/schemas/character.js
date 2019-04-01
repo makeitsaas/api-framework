@@ -15,6 +15,23 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
   }, {
-    tableName: 'character'
+    tableName: 'character',
+    hooks: {
+      /*beforeCreate: (instance, options) => {
+        console.log('local beforeCreate');
+      },
+      beforeSave: (instance, options) => {
+        console.log('local beforeSave');
+      },
+      beforeUpdate: (instance, options) => {
+        console.log('local beforeUpdate');
+      },
+      beforeUpsert: (values, options) => {
+        console.log('local beforeUpsert');
+      },
+      beforeDestroy: (instance, options) => {
+        console.log('local beforeDestroy');
+      }*/
+    }
   })
-}
+};

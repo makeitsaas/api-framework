@@ -9,10 +9,8 @@ module.exports = (redisSettings) => {
       prefixRegex = new RegExp(`^${prefix}`);
 
   // connection to redis
-  var sub = redis.createClient({...redisSettings});  // put here password
-  var pub = redis.createClient({...redisSettings});  // put here password
-  var msg_count = 0;
-
+  const sub = redis.createClient({...redisSettings});  // put here password
+  const pub = redis.createClient({...redisSettings});  // put here password
 
   sub.on("error", (err) => console.log("Error connecting queue " + err));
   sub.on("ready", (err) => console.log("queue connection .....OK"));
@@ -47,19 +45,19 @@ module.exports = (redisSettings) => {
       CHANNELS.push(channel);
       sub.subscribe(channel);
     }
-  }
+  };
 
   const getPrefixedChannel = (channel) => {
     return `${prefix}${channel}`
-  }
+  };
 
   const removePrefix = (prefixedChannel) => {
     return prefixedChannel.replace(prefixRegex, '');
-  }
+  };
 
   const isValidPrefix = (prefixedChannel) => {
     return prefixRegex.test(prefixedChannel);
-  }
+  };
 
   return {
     observable: function(channel) {
@@ -73,16 +71,16 @@ module.exports = (redisSettings) => {
           if(c === channel && active) {
             observer.next(message);
           }
-        }
-        SUBSCRIPTIONS_CALLBACKS.push(callback)
+        };
+        SUBSCRIPTIONS_CALLBACKS.push(callback);
 
         const unsubscribe = () => {
           active = false;
           callback = null;
-        }
+        };
 
         return unsubscribe;
-      })
+      });
 
       subscribeIfNecessary(prefixedChannel);
 
@@ -93,4 +91,4 @@ module.exports = (redisSettings) => {
       pub.publish(prefixedChannel, `${JSON.stringify(message)}`);
     }
   }
-}
+};

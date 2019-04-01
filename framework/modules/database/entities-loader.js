@@ -13,6 +13,7 @@ module.exports = function(sequelize) {
     items.map(fileName => {
         let entityName = fileName.replace(/^(.*)\.js$/, '$1');
         models[entityName] = require(`${schemaDirectory}/${entityName}`)(sequelize, Sequelize.DataTypes)
+        models[entityName].prototype.getChangeSet = changeSetFn;
     });
 
     let syncs = [];
@@ -27,3 +28,21 @@ module.exports = function(sequelize) {
 
     return Promise.all(syncs).then(() => models);
 };
+
+function changeSetFn() {
+    console.log('change set');
+    const changedFields = this.changed && this.changed();
+    if(changedFields) {
+        const changes = {};
+        changedFields.map(fieldName => {
+            changes[fieldName] = {
+                previous: this._previousDataValues && this._previousDataValues[fieldName],
+                next: this.get(fieldName)
+            }
+        });
+
+        return changes;
+    } else {
+        return false;
+    }
+}

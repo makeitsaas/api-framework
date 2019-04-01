@@ -3,6 +3,11 @@ require('../framework/core/core').then(framework => {
     console.log('some log', message);
   });
 
+  framework.queue.observable('entity-change').subscribe(message => {
+    console.log('=> entity-change :');
+    console.log(message);
+  })
+
   /*
   // DEMOS
 
