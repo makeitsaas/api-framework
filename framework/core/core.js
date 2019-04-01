@@ -5,7 +5,7 @@ const framework = {};
 const builder = require('./core-builder')(app, config, framework);
 
 const load = async function() {
-  await builder.configureRoutes();
+  framework.routes = await builder.configureRoutes();
   framework.queue = await builder.configureQueue();
   framework.cache = await builder.configureCache();
   framework.models = await builder.configureModels();

@@ -23,7 +23,11 @@ module.exports = function(app, config, framework) {
       return Promise.resolve(routes);
     },
     configureModels: async function() {
-      const models = await require('../../app/models/orm')();
+      const sequelize = await require('../modules/database/database')();
+
+      // TODO : configure here framework.database
+
+      const models = await require('../modules/database/entities-loader')(sequelize);
 
       return models;
     }
