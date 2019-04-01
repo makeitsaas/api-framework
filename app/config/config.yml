@@ -11,11 +11,14 @@ resources:
       - get: /test/routing
         handler: handler-example.routingResolve
         security: security.rule1
-      - post: /truc/:param
-        handler: get.entities
-        security: security.rule1
       - get: /test/database
         handler: handler-example.modelResolve
+        security: security.rule1
+      - post: /characters
+        handler: handler-modify.createCharacter
+        security: security.rule1
+      - put: /characters/:id
+        handler: handler-modify.updateCharacter
         security: security.rule1
 queue:
   listen:
