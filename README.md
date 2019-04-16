@@ -1,36 +1,36 @@
-# Instance
+# Make It SaaS - Service
 
-## Docker
-```
-docker build -t <repo>/<instance-name> .
-docker run -p 3001:3000 <repo>/<instance-name>
-```
+This is the framework to develop API for a multi-service architectures. Main features :
+* Authentication using a separated oauth server (with jwt and jwk)
+* Database ORM
+* Cache
+* Queues (Pub/Sub)
 
-```
-docker run --name some-redis -p 6379:6379 redis
-docker run -p 80:3000 manual/app_1
-docker run -d -p 80:3000 manual/app_1
-# docker run -p 80:3000 --network="host" manual/app_1
-# docker run -p 80:3000 --hostname db.host manual/app_1
-```
+## Getting started
+
+1. Install [devkit](https://github.com/makeitsaas/makeitsaas-devkit)
+2. Install [authentication instance](https://github.com/makeitsaas/makeitsaas-auth-instance)
+3. Then you can setup your new service :
 
 ```
-./node_modules/sequelize-auto/bin/sequelize-auto -o "app/models/schemas" -d <dbname> -h <dbhost> -u <user> -x <password> -p 3306
+git clone https://github.com/makeitsaas/makeitsaas-microservice my-service
+cd my-service
+docker build -t my-project/my-service .
+docker run -p 3001:3000 my-project/my-service
 ```
 
+or (with npm) :
 
-Host requirements :
 ```
-mysql database (might be anywhere)
-docker ce (cf website)
-
-sudo apt install python-pip
-pip install docker-py
-
-sudo apt-get install nodejs npm
+npm install
+cd framework && npm install # will be removed when moved as a package
+npm start
 ```
 
-## Service
+## Resolvers
+
+Functions that can be binded to routes and have access to the ResolverContext :
+
 ```
 context = {
   request: {headers, body, params, query, tracker}, # usual parameters but might only be tracker because headers determines the function to call and body its arguments
@@ -48,12 +48,12 @@ context = {
 }
 ```
 
+Example :
 
-Requis sur instance :
-* ssh key dans known hosts
-* docker
-* pip et "ansible utils"
-* redis sur multi-host-network
-* mysql
-* proxy up and running
+```yaml
+# PROJECT_PATH/config/config.yml
+- get: /test/authentication
+  handler: handler-example.testResolve
+  security: security.rule1
+```
 
