@@ -17,7 +17,7 @@
     "lodash": "^4.17.11",
     "mysql2": "^1.5.3",
     "rxjs": "^6.3.3",
-    "sequelize": "^4.37.5",
+    "sequelize": "^5.6.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
