@@ -48,7 +48,37 @@ context = {
 }
 ```
 
-Example :
+
+### Cache
+
+```
+framework.cache.set('holidays', {beach: 'volley'});
+
+let subExample = framework.queue.observable('channel-one').subscribe(message => {
+console.log('get this message', message);
+framework.cache.get('holidays').then(value => console.log('holidays :', value)).catch(err => console.log('error', err));
+});
+
+setTimeout(() => framework.queue.publish('channel-one', {foo: 'bar'}), 1000)
+setTimeout(() => framework.queue.publish('channel-one', {foo2: 'bar2'}), 2000)
+setTimeout(() => (subExample.unsubscribe() || framework.queue.publish('channel-one', {foo3: 'bar3'})), 3000)
+```
+
+### Queues Pub/Sub
+
+```
+let subExample = framework.queue.observable('channel-one').subscribe(message => {
+    console.log('get this message', message);
+    framework.cache.get('holidays').then(value => console.log('holidays :', value)).catch(err => console.log('error', err));
+});
+
+setTimeout(() => framework.queue.publish('channel-one', {foo: 'bar'}), 1000)
+setTimeout(() => framework.queue.publish('channel-one', {foo2: 'bar2'}), 2000)
+setTimeout(() => (subExample.unsubscribe(), framework.queue.publish('channel-one', {foo3: 'bar3'})), 3000)
+```
+
+
+### Routing
 
 ```yaml
 # PROJECT_PATH/config/config.yml
