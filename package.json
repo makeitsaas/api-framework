@@ -1,10 +1,12 @@
 {
   "name": "@make-it-saas/api",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "This is the framework to develop API for a multi-service architectures",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/babel lib --out-dir=dist",
+    "watch": "./node_modules/.bin/babel lib --watch --out-dir=dist"
   },
   "author": "",
   "repository": {
@@ -28,8 +30,10 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-2": "^6.24.1"
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/preset-env": "^7.4.3"
   },
   "bugs": {
     "url": "https://github.com/makeitsaas/api-framework/issues"
