@@ -5,6 +5,9 @@ This is the framework to develop API for multi-service architectures. Main featu
 * Database ORM
 * Cache
 * Queues (Pub/Sub)
+* *todo:* Health checker
+* *todo:* API Gate (proxy http.s and ws.s) + editor
+* *todo:* Jupyter
 
 ## Getting started
 
@@ -15,15 +18,8 @@ This is the framework to develop API for multi-service architectures. Main featu
 ```
 git clone https://github.com/makeitsaas/makeitsaas-microservice my-service
 cd my-service
-docker build -t my-project/my-service .
-docker run -p 3001:3000 my-project/my-service
-```
-
-or (with npm) :
-
-```
-npm install
-cd framework && npm install # will be removed when moved as a package
+npm install @make-it-saas/api
+# todo : cli
 npm start
 ```
 

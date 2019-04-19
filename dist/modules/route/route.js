@@ -15,13 +15,14 @@ module.exports = function (app, config, auth, framework) {
             break;
           }
 
-          var appRoot = require('app-root-path'),
+          var appRoot = process.env.__PROJECT_ROOT_PATH__,
               handlerPath,
               handlerFunction,
               handler;
 
           try {
-            handlerPath = "".concat(appRoot, "/../app/src/handlers/").concat(route.handler.split('.')[0]);
+            handlerPath = "".concat(appRoot, "/app/src/handlers/").concat(route.handler.split('.')[0]);
+            console.log('hand path', handlerPath);
             handlerFunction = route.handler.split('.')[1];
             handler = require(handlerPath);
           } catch (e) {
