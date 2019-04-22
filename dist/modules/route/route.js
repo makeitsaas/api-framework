@@ -22,7 +22,6 @@ module.exports = function (app, config, auth, framework) {
 
           try {
             handlerPath = "".concat(appRoot, "/app/src/handlers/").concat(route.handler.split('.')[0]);
-            console.log('hand path', handlerPath);
             handlerFunction = route.handler.split('.')[1];
             handler = require(handlerPath);
           } catch (e) {
@@ -44,25 +43,25 @@ module.exports = function (app, config, auth, framework) {
             };
 
             if (handler) {
-              try {
+              Promise.resolve().then(function () {
                 var ctx = _objectSpread({
-                  params: {
-                    url: req.params,
+                  request: {
+                    params: req.params,
                     query: req.query,
                     body: req.body
                   },
                   user: req.user
                 }, framework);
 
-                handler(ctx, resolve)[handlerFunction]();
-              } catch (error) {
+                return handler(ctx, resolve)[handlerFunction]();
+              })["catch"](function (error) {
                 console.log('error', error);
                 resolve({
-                  mode: 'handler',
+                  error: error && error.message,
                   route: route,
-                  error: error
-                });
-              }
+                  mode: 'handler'
+                }, 500);
+              });
             } else {
               resolve({
                 mode: 'auto',
