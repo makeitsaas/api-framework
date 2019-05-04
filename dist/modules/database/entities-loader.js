@@ -13,6 +13,7 @@ module.exports = function (sequelize) {
     var entityName = fileName.replace(/^(.*)\.js$/, '$1');
     models[entityName] = require("".concat(schemaDirectory, "/").concat(entityName))(sequelize, Sequelize.DataTypes);
     models[entityName].prototype.getChangeSet = changeSetFn;
+    models[entityName];
   });
   var syncs = []; // si pas de table migations => syn
 

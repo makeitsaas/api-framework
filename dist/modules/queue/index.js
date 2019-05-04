@@ -24,7 +24,7 @@ module.exports = function (redisSettings) {
     return console.log("Error connecting queue " + err);
   });
   sub.on("ready", function (err) {
-    return console.log("queue connection .....OK");
+    return console.log("queue connection ..........OK");
   }); // when receiving a message from subscribed channels, do this
 
   sub.on("message", function (prefixedChannel, message) {

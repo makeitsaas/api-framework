@@ -30,8 +30,8 @@ module.exports = function (app, config, framework) {
       });
       return Promise.resolve(routes);
     },
-    configureModels: function () {
-      var _configureModels = _asyncToGenerator(
+    configureDatabase: function () {
+      var _configureDatabase = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
         var sequelize, models;
@@ -40,7 +40,7 @@ module.exports = function (app, config, framework) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return require('../modules/database/database')(framework);
+                return require('../modules/database/sequelize')(framework);
 
               case 2:
                 sequelize = _context.sent;
@@ -49,7 +49,10 @@ module.exports = function (app, config, framework) {
 
               case 5:
                 models = _context.sent;
-                return _context.abrupt("return", models);
+                return _context.abrupt("return", {
+                  sequelize: sequelize,
+                  models: models
+                });
 
               case 7:
               case "end":
@@ -59,11 +62,11 @@ module.exports = function (app, config, framework) {
         }, _callee);
       }));
 
-      function configureModels() {
-        return _configureModels.apply(this, arguments);
+      function configureDatabase() {
+        return _configureDatabase.apply(this, arguments);
       }
 
-      return configureModels;
+      return configureDatabase;
     }()
   };
 };

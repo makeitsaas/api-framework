@@ -1,4 +1,4 @@
-# Make It SaaS - API Service
+# Make it SaaS - API Service
 
 This is the framework to develop API for multi-service architectures. Main features :
 * Authentication using a separated oauth server (with jwt and jwk)

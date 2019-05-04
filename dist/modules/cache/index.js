@@ -17,7 +17,7 @@ module.exports = function (redisSettings) {
     console.log("Error connecting cache " + err);
   });
   client.on("ready", function (err) {
-    console.log("cache connection .....OK");
+    console.log("cache connection ..........OK");
   }); // client.set("cache-xyz", JSON.stringify([1, 2, 3]), (err, res) => {
   //   console.log("set response", err, res);
   //   redis.createClient().get("cache-xyz", (err, res) => {

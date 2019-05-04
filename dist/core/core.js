@@ -18,6 +18,8 @@ function () {
   var _ref = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee() {
+    var _ref2, sequelize, models;
+
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -38,12 +40,18 @@ function () {
           case 8:
             framework.cache = _context.sent;
             _context.next = 11;
-            return builder.configureModels();
+            return builder.configureDatabase();
 
           case 11:
-            framework.models = _context.sent;
+            _ref2 = _context.sent;
+            sequelize = _ref2.sequelize;
+            models = _ref2.models;
+            framework.database = {
+              query: sequelize.query
+            };
+            framework.models = models;
 
-          case 12:
+          case 16:
           case "end":
             return _context.stop();
         }
