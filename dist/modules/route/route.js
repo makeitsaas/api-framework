@@ -60,7 +60,7 @@ module.exports = function (app, config, auth, framework) {
                   error: error && error.message,
                   route: route,
                   mode: 'handler'
-                }, 500);
+                }, getErrorCode(error));
               });
             } else {
               resolve({
@@ -74,3 +74,21 @@ module.exports = function (app, config, auth, framework) {
     }
   }
 };
+
+var codeInMessageRegExp = /^((\(|\[)?(\d+)(\)|\]| ?:)? +)(.*)/;
+
+function getErrorCode(error) {
+  var msg = error && error.message;
+
+  if (msg) {
+    if (codeInMessageRegExp.test(msg)) {
+      return parseInt(msg.replace(codeInMessageRegExp, '$3'));
+    } else if (/not found/i.test(msg)) {
+      return 404;
+    } else if (/invalid/i.test(msg)) {
+      return 400;
+    }
+  }
+
+  return 500;
+}
