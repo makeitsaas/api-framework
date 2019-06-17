@@ -15,17 +15,42 @@ module.exports = function (sequelize) {
     models[entityName].prototype.getChangeSet = changeSetFn;
     models[entityName];
   });
-  var syncs = []; // si pas de table migations => syn
 
-  var hasMigrationTable = false;
+  function syncWithRetry(key, retry) {
+    return models[key].sync()["catch"](function (error) {
+      var err = error.original;
 
-  if (!hasMigrationTable) {
-    for (var key in models) {
-      syncs.push(models[key].sync());
-    }
+      if (err.errno === 1215) {
+        retry--; // console.log('retry sync for', key, retry);
+
+        if (retry > 0) {
+          return syncWithRetry(key, retry);
+        } else {
+          throw err;
+        }
+      } else {
+        throw err;
+      }
+    });
   }
 
-  return Promise.all(syncs).then(function () {
+  return Promise.resolve() // .then(() => sequelize.query('SET FOREIGN_KEY_CHECKS = 0', { raw: true }))
+  .then(function () {
+    var syncs = []; // si pas de table migations => sync
+
+    var hasMigrationTable = false;
+
+    if (!hasMigrationTable) {
+      for (var key in models) {
+        // syncs.push(models[key].sync({ force: true }));
+        syncs.push(syncWithRetry(key, 10));
+      }
+    }
+
+    return Promise.all(syncs);
+  }) // .then(() => Promise.all(syncs))
+  // .then(() => sequelize.query('SET FOREIGN_KEY_CHECKS = 1', { raw: true }))
+  .then(function () {
     return models;
   });
 };
