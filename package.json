@@ -1,6 +1,6 @@
 {
   "name": "@make-it-saas/api",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "This is the framework to develop API for a multi-service architectures",
   "main": "index.js",
   "scripts": {
