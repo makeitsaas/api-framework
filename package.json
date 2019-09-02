@@ -1,23 +1,36 @@
 {
   "name": "@make-it-saas/api",
-  "version": "0.1.9",
+  "version": "1.0.0",
   "description": "This is the framework to develop API for a multi-service architectures",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "./node_modules/.bin/babel lib --out-dir=dist",
-    "watch": "./node_modules/.bin/babel lib --watch --out-dir=dist"
+    "test": "jest --config jestconfig.json --no-watchman",
+    "build": "tsc",
+    "watch": "tsc-watch",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
   },
   "author": "",
   "repository": {
     "name": "git",
     "url": "git://github.com/makeitsaas/api-framework.git"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.0.0",
+    "load-json-file": "^6.2.0",
+    "typeorm": "^0.2.18",
     "app-root-path": "^2.1.0",
     "body-parser": "^1.18.3",
-    "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.4.0",
     "jwk-to-pem": "^2.0.1",
@@ -30,17 +43,23 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.5.5",
-    "@babel/core": "^7.4.3",
-    "@babel/plugin-proposal-class-properties": "^7.4.0",
-    "@babel/preset-env": "^7.4.3"
+    "@types/dotenv": "^6.1.1",
+    "@types/jest": "^24.0.17",
+    "@types/node": "^12.7.0",
+    "jest": "^24.8.0",
+    "prettier": "^1.18.2",
+    "ts-jest": "^24.0.2",
+    "tsc-watch": "^2.4.0",
+    "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.5.3"
   },
   "bugs": {
     "url": "https://github.com/makeitsaas/api-framework/issues"
   },
   "homepage": "https://github.com/makeitsaas/api-framework#readme",
   "directories": {
-    "lib": "lib",
-    "test": "test"
+    "lib": "src",
+    "test": "__tests__"
   }
 }
